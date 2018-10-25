@@ -1,5 +1,7 @@
 package dao;
 
 public class User {
-	protected String 
+	protected int id;
+	protected String nombre;
+	protected String login;
 }
