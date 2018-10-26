@@ -1,6 +1,6 @@
 package dao;
 
-public class User {
+public class UserBean {
 	protected int id;
 	protected String nombre;
 	protected String login;
