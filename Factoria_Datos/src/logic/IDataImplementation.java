@@ -1,18 +1,19 @@
-package dao;
+package logic;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Properties;
 
-public class Implementacion {
+import model.UserBean;
+
+public class IDataImplementation implements IData {
+	
 	private Connection con;
 	private PreparedStatement stmt;
 	private String dbHost;
@@ -62,48 +63,51 @@ public class Implementacion {
 		System.out.println("------------------------");
 	}
 	
-	
-	public void userSingUp (User user) throws Exception {
-		ResultSet rs = null;
+
+	@Override
+	public void userSignUp(UserBean user) throws UserLoginExistException, SQLException {
 		try {
 			connect();
-			String sql="insert into usuarios values(?,?,?,?,?,?,?,?,?)";
-			stmt = con.prepareStatement(sql);
+			String insert="insert into usuarios values(?,?,?,?,?,?,?,?,?)";
+			stmt = con.prepareStatement(insert);
 			stmt.setString(2,user.getLogin());
 			stmt.setString(3,user.getEmail());
 			stmt.setString(4,user.getFullName());
 			stmt.setString(7,user.getPassword());
+			stmt.executeUpdate(insert);
 			
 		}catch(Exception e) {
 			e.getMessage();
 		}finally {
 			disconnect();
 		}
+		
 	}
-	
-	public void userLogin (User user) throws Exception {
+
+	@Override
+	public void UserLogin(UserBean user) throws UserNotExistException, SQLException {
 		ResultSet rs = null;
-		ArrayList <User> usuarios = new ArrayList <User>(); 
+		ArrayList <UserBean> usuarios = new ArrayList <UserBean>(); 
 		try {
 			connect();
-			String sql="select * from usuarios where login=? and password=?";
-			stmt = con.prepareStatement(sql);
+			String select="select * from usuarios where login=? and password=?";
+			stmt = con.prepareStatement(select);
 			stmt.setString(1,user.getLogin());
 			stmt.setString(2,user.getPassword());
 			
-			rs=stmt.executeQuery(sql);
+			rs=stmt.executeQuery(select);
 			
 			while (rs.next()) {
-				User auxUser=new User();
+				UserBean auxUser=new UserBean();
 				auxUser.setId(rs.getInt(1));
 				auxUser.setLogin(rs.getString(2));
 				auxUser.setEmail(rs.getString(3));
 				auxUser.setFullName(rs.getString(4));
-				auxUser.setStatus(rs.getString(5));
-				auxUser.setPrivileges(rs.getString(6));
+				//auxUser.setStatus(rs.getString(5));
+				//auxUser.setPrivileges(rs.getString(6));
 				auxUser.setPassword(rs.getString(7));
-				auxUser.setLastAccess(cambiarFecha(rs.getDate(8)));
-				auxUser.setLastPasswordChange(cambiarFecha(rs.getDate(9)));
+				//auxUser.setLastAccess(cambiarFecha(rs.getDate(8)));
+				//auxUser.setLastPasswordChange(cambiarFecha(rs.getDate(9)));
 				usuarios.add(auxUser);
 			}
 		}catch(Exception e) {
@@ -111,9 +115,6 @@ public class Implementacion {
 		}finally {
 			disconnect();
 		}
-	}
-	
-	private LocalDate cambiarFecha(Date date) {
-		return date.toLocalDate();
+		
 	}
 }
