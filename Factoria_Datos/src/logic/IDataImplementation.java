@@ -11,8 +11,14 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import model.UserBean;
+import server.Pool;
 
-public class IDataImplementation implements IData {
+/**
+*
+* @author Julen
+*/
+
+public class IDataImplementation extends Pool implements IData  {
 	
 	private Connection con;
 	private PreparedStatement stmt;
@@ -21,6 +27,7 @@ public class IDataImplementation implements IData {
 	private String dbUser;
 	private String dbPassword;
 	
+/*
 	public void DBManager() throws IOException {
 		if (dbHost == null) {
 			Properties config = new Properties();
@@ -39,10 +46,6 @@ public class IDataImplementation implements IData {
 		}
 	}
 
-	/**
-	 * Metodo que nos permite conectarnos con la base de datos
-	 * @throws Exception en caso de que ocurra algun error
-	 */
 	private void connect() throws Exception {
 		System.out.println("Conexion Abierta.");
 		Class.forName("com.mysql.cj.jdbc.Driver");
@@ -50,10 +53,6 @@ public class IDataImplementation implements IData {
 		con = DriverManager.getConnection(url, dbUser, dbPassword);
 	}
 
-	/**
-	 * Metodo que nos permite desconectarnos de la base de datos
-	 * @throws SQLException en caso de que ocurra algun error
-	 */
 	private void disconnect() throws SQLException {
 		System.out.println("Conexion Cerrada.");
 		if (stmt != null)
@@ -62,12 +61,13 @@ public class IDataImplementation implements IData {
 			con.close();
 		System.out.println("------------------------");
 	}
+	*/
 	
 
 	@Override
 	public void userSignUp(UserBean user) throws UserLoginExistException, SQLException {
 		try {
-			connect();
+			con = dataSource.getConnection();
 			String insert="insert into usuarios values(?,?,?,?,?,?,?,?,?)";
 			stmt = con.prepareStatement(insert);
 			stmt.setString(2,user.getLogin());
@@ -79,7 +79,7 @@ public class IDataImplementation implements IData {
 		}catch(Exception e) {
 			e.getMessage();
 		}finally {
-			disconnect();
+			con.close();
 		}
 		
 	}
@@ -89,7 +89,7 @@ public class IDataImplementation implements IData {
 		ResultSet rs = null;
 		ArrayList <UserBean> usuarios = new ArrayList <UserBean>(); 
 		try {
-			connect();
+			con = dataSource.getConnection();
 			String select="select * from usuarios where login=? and password=?";
 			stmt = con.prepareStatement(select);
 			stmt.setString(1,user.getLogin());
@@ -113,7 +113,7 @@ public class IDataImplementation implements IData {
 		}catch(Exception e) {
 			e.getMessage();
 		}finally {
-			disconnect();
+			con.close();
 		}
 		
 	}
