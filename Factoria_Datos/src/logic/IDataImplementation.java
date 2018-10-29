@@ -85,7 +85,7 @@ public class IDataImplementation extends Pool implements IData  {
 	}
 
 	@Override
-	public void UserLogin(UserBean user) throws UserNotExistException, SQLException {
+	public void userLogin(UserBean user) throws UserNotExistException, SQLException {
 		ResultSet rs = null;
 		ArrayList <UserBean> usuarios = new ArrayList <UserBean>(); 
 		try {

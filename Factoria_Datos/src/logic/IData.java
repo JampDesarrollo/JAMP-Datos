@@ -18,6 +18,6 @@ public interface IData {
 	
 	public void userSignUp(UserBean user) throws UserLoginExistException, SQLException;
 
-	public void UserLogin(UserBean user) throws UserNotExistException, SQLException;
+	public void userLogin(UserBean user) throws UserNotExistException, SQLException;
 
 }
