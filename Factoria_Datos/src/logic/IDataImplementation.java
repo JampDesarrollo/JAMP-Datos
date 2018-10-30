@@ -65,7 +65,7 @@ public class IDataImplementation extends Pool implements IData  {
 	
 
 	@Override
-	public void userSignUp(UserBean user) throws UserLoginExistException, SQLException {
+	public synchronized void userSignUp(UserBean user) throws UserLoginExistException, SQLException {
 		try {
 			con = dataSource.getConnection();
 			String insert="insert into usuarios values(?,?,?,?,?,?,?,?,?)";
@@ -85,9 +85,9 @@ public class IDataImplementation extends Pool implements IData  {
 	}
 
 	@Override
-	public void UserLogin(UserBean user) throws UserNotExistException, SQLException {
+	public synchronized UserBean userLogin(UserBean user) throws UserNotExistException, PasswordNotOkException, SQLException {
 		ResultSet rs = null;
-		ArrayList <UserBean> usuarios = new ArrayList <UserBean>(); 
+		UserBean usuario = new UserBean(); 
 		try {
 			con = dataSource.getConnection();
 			String select="select * from usuarios where login=? and password=?";
@@ -108,7 +108,6 @@ public class IDataImplementation extends Pool implements IData  {
 				auxUser.setPassword(rs.getString(7));
 				//auxUser.setLastAccess(cambiarFecha(rs.getDate(8)));
 				//auxUser.setLastPasswordChange(cambiarFecha(rs.getDate(9)));
-				usuarios.add(auxUser);
 			}
 		}catch(Exception e) {
 			e.getMessage();
@@ -116,5 +115,6 @@ public class IDataImplementation extends Pool implements IData  {
 			con.close();
 		}
 		
+		return usuario;
 	}
 }
