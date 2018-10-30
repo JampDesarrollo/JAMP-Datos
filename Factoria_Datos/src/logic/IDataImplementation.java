@@ -15,6 +15,7 @@ import server.Pool;
 
 /**
 *
+* @author Markel
 * @author Julen
 */
 
@@ -35,10 +36,10 @@ public class IDataImplementation extends Pool implements IData  {
 			try {
 				input = new FileInputStream("config.config");
 				config.load(input);
-				dbHost = config.getProperty("ip");
-				dbName = config.getProperty("dbname");
-				dbUser = config.getProperty("username");
-				dbPassword = config.getProperty("password");
+				dbHost = config.getProperty("IP");
+				dbName = config.getProperty("dbName");
+				dbUser = config.getProperty("dbUser");
+				dbPassword = config.getProperty("dbPass");
 			} finally {
 				if (input != null)
 					input.close();
@@ -55,19 +56,14 @@ public class IDataImplementation extends Pool implements IData  {
 
 	private void disconnect() throws SQLException {
 		System.out.println("Conexion Cerrada.");
-		if (stmt != null)
-			stmt.close();
 		if (con != null)
 			con.close();
 		System.out.println("------------------------");
 	}
 	
-	
-
 	@Override
 	public void userSignUp(UserBean user) throws UserLoginExistException, SQLException {
 		try {
-			//con = dataSource.getConnection();
 			connect();
 			String insert="insert into usuarios('login','email','fullname','passsword') values(?,?,?,?)";
 			stmt = con.prepareStatement(insert);
@@ -80,7 +76,7 @@ public class IDataImplementation extends Pool implements IData  {
 		}catch(Exception e) {
 			e.getMessage();
 		}finally {
-			//con.close();
+			stmt.close();
 			disconnect();
 		}
 		
@@ -91,7 +87,6 @@ public class IDataImplementation extends Pool implements IData  {
 		ResultSet rs = null;
 		ArrayList <UserBean> usuarios = new ArrayList <UserBean>(); 
 		try {
-			//con = dataSource.getConnection();
 			connect();
 			String select="select * from usuarios where login=? and password=?";
 			stmt = con.prepareStatement(select);
@@ -116,7 +111,7 @@ public class IDataImplementation extends Pool implements IData  {
 		}catch(Exception e) {
 			e.getMessage();
 		}finally {
-			//con.close();
+			stmt.close();
 			disconnect();
 		}
 		
