@@ -8,15 +8,19 @@ import java.sql.SQLException;
 import java.util.Properties;
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp2.BasicDataSourceFactory;
+
 import logic.UserLoginExistException;
 import model.UserBean;
-
 /**
 *
 * @author Julen
 */
 
 public class Pool {
+	
+	Properties propiedades = new Properties();
+	propiedades.load(new FileInputStream("src/logic/propierties"));
 
 	public DataSource dataSource;
 
@@ -52,18 +56,17 @@ public class Pool {
 
 	}
 
+	
 	private void inicializaDataSource() {
 		
+		//MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();
+		BasicDataSourceFactory basicDataSource = new BasicDataSourceFactory();
 
-		BasicDataSource basicDataSource = new BasicDataSource();
-
-		basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		basicDataSource.setUsername(dbUser);
-		basicDataSource.setPassword(dbPass);
-		basicDataSource.setUrl(dbUrl);
-		basicDataSource.setMaxActive(5);
-
-		dataSource = basicDataSource;
+		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+		dataSource.setUsername(dbUser);
+		dataSource.setPassword(dbPass);
+		dataSource.setUrl(dbUrl);
+		dataSource.setMaxActive(5);
 
 	}
 	
