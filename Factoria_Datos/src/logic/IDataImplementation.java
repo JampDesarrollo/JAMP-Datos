@@ -27,13 +27,13 @@ public class IDataImplementation extends Pool implements IData  {
 	private String dbUser;
 	private String dbPassword;
 	
-/*
+
 	public void DBManager() throws IOException {
 		if (dbHost == null) {
 			Properties config = new Properties();
 			FileInputStream input = null;
 			try {
-				input = new FileInputStream("./dao/properties");
+				input = new FileInputStream("config.config");
 				config.load(input);
 				dbHost = config.getProperty("ip");
 				dbName = config.getProperty("dbname");
@@ -61,14 +61,15 @@ public class IDataImplementation extends Pool implements IData  {
 			con.close();
 		System.out.println("------------------------");
 	}
-	*/
+	
 	
 
 	@Override
 	public synchronized void userSignUp(UserBean user) throws UserLoginExistException, SQLException {
 		try {
-			con = dataSource.getConnection();
-			String insert="insert into usuarios values(?,?,?,?,?,?,?,?,?)";
+			//con = dataSource.getConnection();
+			connect();
+			String insert="insert into usuarios('login','email','fullname','passsword') values(?,?,?,?)";
 			stmt = con.prepareStatement(insert);
 			stmt.setString(2,user.getLogin());
 			stmt.setString(3,user.getEmail());
@@ -79,7 +80,8 @@ public class IDataImplementation extends Pool implements IData  {
 		}catch(Exception e) {
 			e.getMessage();
 		}finally {
-			con.close();
+			//con.close();
+			disconnect();
 		}
 		
 	}
@@ -89,7 +91,8 @@ public class IDataImplementation extends Pool implements IData  {
 		ResultSet rs = null;
 		UserBean usuario = new UserBean(); 
 		try {
-			con = dataSource.getConnection();
+			//con = dataSource.getConnection();
+			connect();
 			String select="select * from usuarios where login=? and password=?";
 			stmt = con.prepareStatement(select);
 			stmt.setString(1,user.getLogin());
@@ -112,7 +115,8 @@ public class IDataImplementation extends Pool implements IData  {
 		}catch(Exception e) {
 			e.getMessage();
 		}finally {
-			con.close();
+			//con.close();
+			disconnect();
 		}
 		
 		return usuario;
