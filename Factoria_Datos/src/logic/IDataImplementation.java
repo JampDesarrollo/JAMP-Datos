@@ -84,7 +84,9 @@ public class IDataImplementation implements IData  {
 
 	public synchronized UserBean userLogin(UserBean user) throws UserNotExistException, PasswordNotOkException, SQLException {
 		ResultSet rs = null;
+
 		UserBean usuario = new UserBean();
+
 		try {
 			connect();
 			String select="select * from usuarios where login=? and password=?";
