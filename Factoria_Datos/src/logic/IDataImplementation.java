@@ -9,9 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
-
 import model.UserBean;
-import server.Pool;
 
 /**
 *
@@ -19,7 +17,7 @@ import server.Pool;
 * @author Julen
 */
 
-public class IDataImplementation extends Pool implements IData  {
+public class IDataImplementation implements IData  {
 	
 	private Connection con;
 	private PreparedStatement stmt;
@@ -67,10 +65,10 @@ public class IDataImplementation extends Pool implements IData  {
 			connect();
 			String insert="insert into usuarios('login','email','fullname','passsword') values(?,?,?,?)";
 			stmt = con.prepareStatement(insert);
-			stmt.setString(2,user.getLogin());
-			stmt.setString(3,user.getEmail());
-			stmt.setString(4,user.getFullName());
-			stmt.setString(7,user.getPassword());
+			stmt.setString(1,user.getLogin());
+			stmt.setString(2,user.getEmail());
+			stmt.setString(3,user.getFullName());
+			stmt.setString(4,user.getPassword());
 			stmt.executeUpdate(insert);
 			
 		}catch(Exception e) {
@@ -83,6 +81,7 @@ public class IDataImplementation extends Pool implements IData  {
 	}
 
 	@Override
+
 	public synchronized UserBean userLogin(UserBean user) throws UserNotExistException, PasswordNotOkException, SQLException {
 		ResultSet rs = null;
 		UserBean usuario = new UserBean(); 
@@ -101,11 +100,8 @@ public class IDataImplementation extends Pool implements IData  {
 				auxUser.setLogin(rs.getString(2));
 				auxUser.setEmail(rs.getString(3));
 				auxUser.setFullName(rs.getString(4));
-				//auxUser.setStatus(rs.getString(5));
-				//auxUser.setPrivileges(rs.getString(6));
 				auxUser.setPassword(rs.getString(7));
-				//auxUser.setLastAccess(cambiarFecha(rs.getDate(8)));
-				//auxUser.setLastPasswordChange(cambiarFecha(rs.getDate(9)));
+				usuarios.add(auxUser);
 			}
 		}catch(Exception e) {
 			e.getMessage();
