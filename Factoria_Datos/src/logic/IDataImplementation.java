@@ -7,9 +7,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Properties;
-import model.UserBean;
+
+import messageuserbean.UserBean;
 
 /**
 *
@@ -67,7 +67,7 @@ public class IDataImplementation implements IData  {
 			stmt = con.prepareStatement(insert);
 			stmt.setString(1,user.getLogin());
 			stmt.setString(2,user.getEmail());
-			stmt.setString(3,user.getFullName());
+			stmt.setString(3,user.getFullname());
 			stmt.setString(4,user.getPassword());
 			stmt.executeUpdate(insert);
 			
@@ -84,7 +84,9 @@ public class IDataImplementation implements IData  {
 
 	public synchronized UserBean userLogin(UserBean user) throws UserNotExistException, PasswordNotOkException, SQLException {
 		ResultSet rs = null;
-		ArrayList <UserBean> usuarios = new ArrayList <UserBean>();
+
+		UserBean usuario = new UserBean();
+
 		try {
 			connect();
 			String select="select * from usuarios where login=? and password=?";
@@ -94,15 +96,13 @@ public class IDataImplementation implements IData  {
 			
 			rs=stmt.executeQuery(select);
 			
-			while (rs.next()) {
-				UserBean auxUser=new UserBean();
-				auxUser.setId(rs.getInt(1));
-				auxUser.setLogin(rs.getString(2));
-				auxUser.setEmail(rs.getString(3));
-				auxUser.setFullName(rs.getString(4));
-				auxUser.setPassword(rs.getString(7));
-				usuarios.add(auxUser);
-			}
+			usuario.setId(rs.getInt(1));
+			usuario.setLogin(rs.getString(2));
+			usuario.setEmail(rs.getString(3));
+			usuario.setFullname(rs.getString(4));
+			usuario.setPassword(rs.getString(7));
+			
+			
 		}catch(Exception e) {
 			e.getMessage();
 		}finally {
@@ -110,6 +110,6 @@ public class IDataImplementation implements IData  {
 			disconnect();
 		}
 		
-		return usuarios;
+		return usuario;
 	}
 }

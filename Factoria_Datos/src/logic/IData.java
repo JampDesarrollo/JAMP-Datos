@@ -7,7 +7,9 @@ package logic;
 
 import java.sql.SQLException;
 
-import model.UserBean;
+import messageuserbean.UserBean;
+
+
 
 /**
 *
