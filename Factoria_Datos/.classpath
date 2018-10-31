@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="C:/Users/Julen/git/JAMP-Datos2/Factoria_Datos/libreria/mysql-connector-java-5.1.35-bin.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Julen/git/JAMP-Datos2/Factoria_Datos/libreria/commons-pool2-2.6.0-src.zip"/>
 	<classpathentry kind="lib" path="libreria/mysql-connector-java-5.1.35-bin.jar"/>
+	<classpathentry kind="lib" path="libreria/MessageAndUserbean.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
