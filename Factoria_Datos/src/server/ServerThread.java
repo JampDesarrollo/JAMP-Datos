@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import codes.Message;
 import logic.IData;
 import logic.PasswordNotOkException;
 import logic.UserLoginExistException;
 import logic.UserNotExistException;
-import model.UserBean;
+import messageuserbean.UserBean;
+import messageuserbean.Message;;
 
 /**
  *
@@ -50,14 +50,19 @@ public class ServerThread extends Thread {
 			case 1:
 				iData.userSignUp(receivedBean);
 			case 2:
-				 user = iData.userLogin(receivedBean);
-				 message = new Message(2, user);
+				user = iData.userLogin(receivedBean);
+				message = new Message(2, user);
+				try {
+					output.writeObject(message);
+				} catch (Exception e1) {
+					message = new Message(-2, null);
 					try {
 						output.writeObject(message);
-					} catch (IOException e1) {
+					} catch (IOException e2) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+				}
 			}
 
 		} catch (UserLoginExistException e) {
@@ -93,6 +98,16 @@ public class ServerThread extends Thread {
 			LOGGER.log(Level.INFO, "{0} No se ha podido abrir la ventana. \n ", e.getMessage());
 		} catch (ClassNotFoundException e) {
 			LOGGER.log(Level.INFO, "{0} Clase no encontrada. \n ", e.getMessage());
+		} catch (Exception e) {
+			LOGGER.log(Level.INFO, "{0} Error. \n ", e.getMessage());
+			message = new Message(-2, null);
+			try {
+				output.writeObject(message);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
+
 	}
 }
