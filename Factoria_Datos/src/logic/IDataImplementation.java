@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import messageuserbean.UserBean;
 
@@ -21,29 +22,12 @@ public class IDataImplementation implements IData  {
 	
 	private Connection con;
 	private PreparedStatement stmt;
-	private String dbHost;
-	private String dbName;
-	private String dbUser;
-	private String dbPassword;
+	private String dbHost = ResourceBundle.getBundle("config.config").getString("IP");
+	private String dbName = ResourceBundle.getBundle("config.config").getString("dbName");
+	private String dbUser = ResourceBundle.getBundle("config.config").getString("dbUser");
+	private String dbPassword = ResourceBundle.getBundle("config.config").getString("dbPassword");
 	
 
-	public void DBManager() throws IOException {
-		if (dbHost == null) {
-			Properties config = new Properties();
-			FileInputStream input = null;
-			try {
-				input = new FileInputStream("config.config");
-				config.load(input);
-				dbHost = config.getProperty("IP");
-				dbName = config.getProperty("dbName");
-				dbUser = config.getProperty("dbUser");
-				dbPassword = config.getProperty("dbPass");
-			} finally {
-				if (input != null)
-					input.close();
-			}
-		}
-	}
 
 	private void connect() throws Exception {
 		System.out.println("Conexion Abierta.");
