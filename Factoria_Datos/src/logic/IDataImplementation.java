@@ -60,7 +60,7 @@ public class IDataImplementation implements IData  {
 	}
 	
 	@Override
-	public void userSignUp(UserBean user) throws UserLoginExistException, SQLException {
+	public synchronized void userSignUp(UserBean user) throws UserLoginExistException, SQLException {
 		try {
 			connect();
 			String insert="insert into usuarios('login','email','fullname','passsword') values(?,?,?,?)";
@@ -81,9 +81,10 @@ public class IDataImplementation implements IData  {
 	}
 
 	@Override
-	public void userLogin(UserBean user) throws UserNotExistException, SQLException {
+
+	public synchronized UserBean userLogin(UserBean user) throws UserNotExistException, PasswordNotOkException, SQLException {
 		ResultSet rs = null;
-		ArrayList <UserBean> usuarios = new ArrayList <UserBean>(); 
+		UserBean usuario = new UserBean(); 
 		try {
 			connect();
 			String select="select * from usuarios where login=? and password=?";
@@ -109,5 +110,6 @@ public class IDataImplementation implements IData  {
 			disconnect();
 		}
 		
+		return usuario;
 	}
 }
