@@ -51,7 +51,8 @@ public class SocketServer {
 					socket = server.accept();
 					// each client will be treated in a thread
 					ServerThread thread = new ServerThread(socket, iData);
-					thread.start();
+					Thread t =new Thread(thread);
+					t.start();
 				}
 			}
 
