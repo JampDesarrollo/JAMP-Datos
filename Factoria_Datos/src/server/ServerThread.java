@@ -8,12 +8,13 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 import logic.IData;
 import logic.PasswordNotOkException;
 import logic.UserLoginExistException;
 import logic.UserNotExistException;
+import messageuserbean.Message;
 import messageuserbean.UserBean;
-import messageuserbean.Message;;
 
 /**
  *
@@ -41,7 +42,7 @@ public class ServerThread extends Thread {
 		try {
 			input = new ObjectInputStream(socket.getInputStream());
 			output = new ObjectOutputStream(socket.getOutputStream());
-
+			System.out.println("Dentro de tread, leyendo del socket");
 			message = (Message) input.readObject();
 			int code = message.getCode();
 			receivedBean = (UserBean) message.getUser();
@@ -49,6 +50,20 @@ public class ServerThread extends Thread {
 			switch (code) {
 			case 1:
 				iData.userSignUp(receivedBean);
+				message = new Message(1, null);
+				try {
+					output.writeObject(message);
+				} catch (Exception e1) {
+					message = new Message(-1, null);
+					try {
+						output.writeObject(message);
+					} catch (IOException e2) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+				break;
 			case 2:
 				user = iData.userLogin(receivedBean);
 				message = new Message(2, user);
@@ -63,6 +78,7 @@ public class ServerThread extends Thread {
 						e1.printStackTrace();
 					}
 				}
+				break;
 			}
 
 		} catch (UserLoginExistException e) {
@@ -100,7 +116,7 @@ public class ServerThread extends Thread {
 			LOGGER.log(Level.INFO, "{0} Clase no encontrada. \n ", e.getMessage());
 		} catch (Exception e) {
 			LOGGER.log(Level.INFO, "{0} Error. \n ", e.getMessage());
-			message = new Message(-2, null);
+			message = new Message(-1, null);
 			try {
 				output.writeObject(message);
 			} catch (IOException e1) {
