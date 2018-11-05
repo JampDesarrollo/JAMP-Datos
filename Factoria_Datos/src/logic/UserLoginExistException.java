@@ -18,4 +18,8 @@ public class UserLoginExistException extends Exception {
 	public UserLoginExistException(String msg){
         super(msg);
     }
+
+	public UserLoginExistException() {
+		// TODO Auto-generated constructor stub
+	}
 }
