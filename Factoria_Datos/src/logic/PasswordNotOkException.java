@@ -22,5 +22,9 @@ public class PasswordNotOkException extends Exception{
         super(msg);
         
     }
+
+	public PasswordNotOkException() {
+		// TODO Auto-generated constructor stub
+	}
     
 }

@@ -21,5 +21,9 @@ public class UserNotExistException extends Exception {
         super(msg);
         
     }
+
+	public UserNotExistException() {
+		// TODO Auto-generated constructor stub
+	}
     
 }
