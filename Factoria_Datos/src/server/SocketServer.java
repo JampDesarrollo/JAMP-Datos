@@ -48,7 +48,9 @@ public class SocketServer {
 
 				if (Thread.activeCount() < Integer.parseInt(MAXTHREADS)) {
 					// Wait for a connection request.
+					System.out.println("Esperando");
 					socket = server.accept();
+					System.out.println("Aceptado");
 					// each client will be treated in a thread
 					ServerThread thread = new ServerThread(socket, iData);
 					Thread t =new Thread(thread);
