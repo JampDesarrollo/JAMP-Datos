@@ -5,7 +5,6 @@
  */
 package logic;
 
-import java.sql.SQLException;
 
 import messageuserbean.UserBean;
 
@@ -18,8 +17,8 @@ import messageuserbean.UserBean;
 
 public interface IData {
 	
-	public void userSignUp(UserBean user) throws UserLoginExistException, SQLException;
+	public void userSignUp(UserBean user) throws UserLoginExistException, Exception;
 
-	public UserBean userLogin(UserBean user) throws UserNotExistException, PasswordNotOkException, SQLException;
+	public UserBean userLogin(UserBean user) throws UserNotExistException, PasswordNotOkException, Exception;
 
 }
