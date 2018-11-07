@@ -4,13 +4,19 @@
  * and open the template in the editor.
  */
 package logic;
+
 /**
-*
-* @author Julen
-*/
+ * This class is a factory for IData interface implementing objects.
+ * 
+ * @author Julen
+ */
 
-public class IDataFactory{
-
+public class IDataFactory {
+	/**
+	 * It returns IData interface implementing object
+	 * 
+	 * @return An object implementing IData.
+	 */
 	public static IData getIData() {
 		// TODO Auto-generated method stub
 		return new IDataImplementation();

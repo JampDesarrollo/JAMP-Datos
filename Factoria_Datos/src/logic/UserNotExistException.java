@@ -6,7 +6,7 @@
 package logic;
 
 /**
- *
+ * Exception thrown when the login doesn't exist
  * @author Julen
  */
 public class UserNotExistException extends Exception {

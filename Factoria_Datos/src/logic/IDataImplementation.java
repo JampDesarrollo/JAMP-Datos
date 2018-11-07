@@ -7,63 +7,108 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import messageuserbean.UserBean;
 
 /**
- *
+ * This class implements IData interface.
+ * 
  * @author Markel
  * @author Julen
  */
 
 public class IDataImplementation implements IData {
-
+	/**
+	 * Connection to the database.
+	 */
 	private Connection con;
+	/**
+	 * Statements to execute on the database.
+	 */
 	private PreparedStatement stmt;
+	/**
+	 * Databases' IP address
+	 */
 	private String dbHost = ResourceBundle.getBundle("config.config").getString("IP");
+	/**
+	 * Databases name
+	 */
 	private String dbName = ResourceBundle.getBundle("config.config").getString("dbName");
+	/**
+	 * User of the database
+	 */
 	private String dbUser = ResourceBundle.getBundle("config.config").getString("dbUser");
+	/**
+	 * Password to access the database
+	 */
 	private String dbPassword = ResourceBundle.getBundle("config.config").getString("dbPassword");
+	/**
+	 * Logger of the class
+	 */
+	private static final Logger LOGGER = Logger.getLogger("logic");
 
+	/**
+	 * Method that opens connection to the database.
+	 * 
+	 * @throws IOException
+	 * @throws SQLException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
 	private void connect()
 			throws IOException, SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		System.out.println("Abriendo Conexion.");
+		LOGGER.info("Openning connection");
 		Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 		String url = "jdbc:mysql://" + dbHost + "/" + dbName;
 		con = DriverManager.getConnection(url, dbUser, dbPassword);
-		System.out.println("Conexion Abierta.");
+		LOGGER.info("Connection openned");
 	}
 
+	/**
+	 * Method that closes connection to the database.
+	 * 
+	 * @throws SQLException
+	 */
 	private void disconnect() throws SQLException {
-		System.out.println("Cerrando Conexion.");
+		LOGGER.info("Closing connection");
 		if (con != null)
 			con.close();
-		System.out.println("Conexion Cerrada.");
+		LOGGER.info("Connection closed");
 	}
 
+	/**
+	 * This method before creating a new UserBean, check if the login already
+	 * exists.
+	 * 
+	 * @param user The UserBean object to be added.
+	 * @throws UserLoginExistException If the login already exists
+	 * @throws Exception               If there is any error while processing.
+	 */
 	@Override
-	public synchronized void userSignUp(UserBean user) throws UserLoginExistException, SQLException {
+	public synchronized void userSignUp(UserBean user) throws UserLoginExistException, Exception {
 		ResultSet rs = null;
 		try {
 			connect();
-			
+
 			// -------------------- Comprobar la existencia del usuario --------------------
 			String selectUserExist = "select * from usuarios where login=?";
 			stmt = con.prepareStatement(selectUserExist);
-			stmt.setString(1, user.getLogin());		
-			rs=stmt.executeQuery();
+			stmt.setString(1, user.getLogin());
+			rs = stmt.executeQuery();
 			// -------------------- Comprobar la existencia del usuario --------------------
-			
-			
-			// -------------------- si existe el usuario llamar a la excepcion --------------------
-			if(rs.next()) {
+
+			// -------------------- si existe el usuario llamar a la excepcion
+			// --------------------
+			if (rs.next()) {
 				throw new UserLoginExistException();
-			// -------------------- si existe el usuario llamar a la excepcion --------------------
-			
-			
-			
-			// -------------------- si no existe el usuario introducir los datos que se le pasan en la variable user --------------------
-			}else {
+				// -------------------- si existe el usuario llamar a la excepcion
+				// --------------------
+
+				// -------------------- si no existe el usuario introducir los datos que se le
+				// pasan en la variable user --------------------
+			} else {
 				String insert = "insert into usuarios(login, email, fullname, password) values(?, ?, ?, ?)";
 				stmt = con.prepareStatement(insert);
 				stmt.setString(1, user.getLogin());
@@ -72,23 +117,19 @@ public class IDataImplementation implements IData {
 				stmt.setString(4, user.getPassword());
 				stmt.executeUpdate();
 			}
-			// -------------------- si no existe el usuario introducir los datos que se le pasan en la variable user --------------------
+			// -------------------- si no existe el usuario introducir los datos que se le
+			// pasan en la variable user --------------------
 
 		} catch (SQLException e) {
-			e.getMessage();
-			e.printStackTrace();
+			LOGGER.severe("SQLException: " + e.getMessage());
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.severe("InstantiationException: " + e.getMessage());
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.severe("IllegalAccessException: " + e.getMessage());
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.severe("ClassNotFoundException: " + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.severe("IOException: " + e.getMessage());
 		} finally {
 			stmt.close();
 			disconnect();
@@ -96,11 +137,20 @@ public class IDataImplementation implements IData {
 
 	}
 
+	/**
+	 * This method getting the UserBean, checks if the login exists and then if the
+	 * password for that login is correct.
+	 * 
+	 * @return All info of the UserBean
+	 * @param user The UserBean object to check
+	 * @throws UserNotExistException  If the login doesn't exist
+	 * @throws PasswordNotOkException If the password for the login isn't correct
+	 * @throws Exception              If there is any error while processing.
+	 */
 	@Override
-
 	public synchronized UserBean userLogin(UserBean user)
-			throws UserNotExistException, PasswordNotOkException, SQLException {
-		ResultSet rs = null,rs2 = null;
+			throws UserNotExistException, PasswordNotOkException, Exception {
+		ResultSet rs = null, rs2 = null;
 
 		UserBean usuario = new UserBean();
 
@@ -112,11 +162,9 @@ public class IDataImplementation implements IData {
 			stmt.setString(1, user.getLogin());
 			rs = stmt.executeQuery();
 			// -------------------- Comprobar la existencia del usuario --------------------
-			
-			
-			
-			
-			// -------------------- Si existe el usuario Comprobar la Contraseña --------------------
+
+			// -------------------- Si existe el usuario Comprobar la Contraseña
+			// --------------------
 			if (rs.next()) {
 				String selectInicioSesion = "select * from usuarios where login = ? and password=? ";
 				stmt = con.prepareStatement(selectInicioSesion);
@@ -124,21 +172,19 @@ public class IDataImplementation implements IData {
 				stmt.setString(2, user.getPassword());
 
 				rs2 = stmt.executeQuery();
-			// -------------------- Si existe el usuario Comprobar la Contraseña --------------------
-			
-				
-				
-				
-			// -------------------- Si no existe el usuario llamar a la excepcion --------------------
-			}else {
+				// -------------------- Si existe el usuario Comprobar la Contraseña
+				// --------------------
+
+				// -------------------- Si no existe el usuario llamar a la excepcion
+				// --------------------
+			} else {
 				throw new UserNotExistException();
 			}
-			// -------------------- Si no existe el usuario llamar a la excepcion --------------------
-			
-			
-			
-			
-			// -------------------- Si la Contraseña es correcta almacenar los datos en una variable user --------------------
+			// -------------------- Si no existe el usuario llamar a la excepcion
+			// --------------------
+
+			// -------------------- Si la Contraseña es correcta almacenar los datos en una
+			// variable user --------------------
 			if (rs2.next()) {
 				usuario.setId(rs2.getInt(1));
 				usuario.setLogin(rs2.getString(2));
@@ -147,31 +193,26 @@ public class IDataImplementation implements IData {
 				usuario.setPassword(rs2.getString(7));
 				usuario.setLastPasswordChange(rs2.getTimestamp(8));
 				usuario.setLastAccess(rs2.getTimestamp(9));
-			// -------------------- Si la Contraseña es correcta almacenar los datos en una variable user --------------------
-				
-				
-				
-				
-			// -------------------- Si la Contraseña no es correcta llamar a la excepcion --------------------
-			}else {
+				// -------------------- Si la Contraseña es correcta almacenar los datos en una
+				// variable user --------------------
+
+				// -------------------- Si la Contraseña no es correcta llamar a la excepcion
+				// --------------------
+			} else {
 				throw new PasswordNotOkException();
 			}
-			// -------------------- Si la Contraseña no es correcta llamar a la excepcion --------------------
+			// -------------------- Si la Contraseña no es correcta llamar a la excepcion
+			// --------------------
 		} catch (SQLException e) {
-			e.getMessage();
-			e.printStackTrace();
+			LOGGER.severe("SQLException: " + e.getMessage());
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.severe("InstantiationException: " + e.getMessage());
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.severe("IllegalAccessException: " + e.getMessage());
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.severe("ClassNotFoundException: " + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.severe("IOException: " + e.getMessage());
 		} finally {
 			stmt.close();
 			disconnect();

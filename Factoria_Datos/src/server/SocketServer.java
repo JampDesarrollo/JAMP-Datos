@@ -4,35 +4,45 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import logic.IData;
 import logic.IDataFactory;
 
 /**
- *
+ * Socket server class for communication between socket client and server. It
+ * contains start method for initialization of threads for each connection.
+ * 
  * @author Ander
  */
 public class SocketServer {
 	/**
-	 * 
+	 * Port from which the connection to the client socket will be done.
 	 */
 	private final String PORT = ResourceBundle.getBundle("config.config").getString("PORT");
 	/**
-	 * 
+	 * Maximum threads that can be created.
 	 */
 	private final String MAXTHREADS = ResourceBundle.getBundle("config.config").getString("MAXTHREADS");
+	/**
+	 * Logger of the class
+	 */
+	private static final Logger LOGGER = Logger.getLogger("server");
 
 	/**
+	 * Main method for the initialization of the server application.
 	 * 
 	 * @param args
 	 */
+
 	public static void main(String[] args) {
 		SocketServer s = new SocketServer();
 		s.start();
 	}
 
 	/**
-	 * 
+	 * Start method that accepts incoming requests from the client and creates a new
+	 * thread for each request.
 	 */
 	public void start() {
 		ServerSocket server = null;
@@ -43,27 +53,25 @@ public class SocketServer {
 			server = new ServerSocket(Integer.parseInt(PORT));
 			IData iData = IDataFactory.getIData();
 
-			// Create threads while less than max threads
+			// Accept every request
 			while (true) {
-
+				// Create threads while less than max threads
 				if (Thread.activeCount() < Integer.parseInt(MAXTHREADS)) {
 					// Wait for a connection request.
-					System.out.println("Esperando");
+					LOGGER.info("Esperando");
 					socket = server.accept();
-					System.out.println("Aceptado");
-					// each client will be treated in a thread
+					LOGGER.info("Aceptado");
+					// Each client will be treated in a thread
 					ServerThread thread = new ServerThread(socket, iData);
-					Thread t =new Thread(thread);
+					Thread t = new Thread(thread);
 					t.start();
 				}
 			}
 
-			// System.out.println(p.toString());
-
 		} catch (IOException e) {
-			System.out.println("Error: " + e.getMessage());
+			LOGGER.severe("IOExcpetion in socket server: " + e.getMessage());
 		} catch (Exception e) {
-			System.out.println("Error: " + e.getMessage());
+			LOGGER.severe("Excpetion in socket server: " + e.getMessage());
 		} finally {
 			try {
 				if (server != null)
@@ -71,7 +79,7 @@ public class SocketServer {
 				if (socket != null)
 					socket.close();
 			} catch (IOException e) {
-				System.out.println("Error: " + e.getMessage());
+				LOGGER.severe("IOExcpetion in socket server while closing: " + e.getMessage());
 			}
 		}
 	}

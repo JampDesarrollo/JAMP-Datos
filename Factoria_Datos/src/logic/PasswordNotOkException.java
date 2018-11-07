@@ -6,25 +6,25 @@
 package logic;
 
 /**
- *
+ * Exception thrown when the password for the login isn't correct
+ * 
  * @author Julen
  */
-public class PasswordNotOkException extends Exception{
-
+public class PasswordNotOkException extends Exception {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public PasswordNotOkException(String msg){
-    
-        super(msg);
-        
-    }
+	public PasswordNotOkException(String msg) {
+
+		super(msg);
+
+	}
 
 	public PasswordNotOkException() {
 		// TODO Auto-generated constructor stub
 	}
-    
+
 }
