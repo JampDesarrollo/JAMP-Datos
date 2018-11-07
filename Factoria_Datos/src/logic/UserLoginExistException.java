@@ -6,18 +6,19 @@
 package logic;
 
 /**
- * Exception thrown when the user login exist on database
- * @author Julen
+ * Exception thrown when the user login exists on database
+ * 
+ * @author Ander
  */
 public class UserLoginExistException extends Exception {
-     /**
-	 * 
-	 */
+	/**
+	* 
+	*/
 	private static final long serialVersionUID = 1L;
 
-	public UserLoginExistException(String msg){
-        super(msg);
-    }
+	public UserLoginExistException(String msg) {
+		super(msg);
+	}
 
 	public UserLoginExistException() {
 		// TODO Auto-generated constructor stub
