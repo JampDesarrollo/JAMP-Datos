@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -180,8 +181,14 @@ public class IDataImplementation implements IData {
 			} else {
 				throw new UserNotExistException();
 			}
-			// -------------------- Si no existe el usuario llamar a la excepcion
+			// -------------------- Como las comprobaciones correctas, actualizamos fecha de login
 			// --------------------
+				Timestamp last= new Timestamp(System.currentTimeMillis()); 
+				String updateLastAcces = "update usuarios set lastAccess = '"+last+"' where login = ?";
+				stmt = con.prepareStatement(updateLastAcces);
+				stmt.setString(1, user.getLogin());
+				
+				stmt.executeUpdate();
 
 			// -------------------- Si la Contraseña es correcta almacenar los datos en una
 			// variable user --------------------
