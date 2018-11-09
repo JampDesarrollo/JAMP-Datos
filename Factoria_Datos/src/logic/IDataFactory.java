@@ -8,7 +8,10 @@ package logic;
 /**
  * This class is a factory for IData interface implementing objects.
  * 
+ * @author Markel
  * @author Julen
+ * @author Ander
+ * @author Paula
  */
 
 public class IDataFactory {

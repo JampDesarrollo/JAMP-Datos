@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import logic.IData;
@@ -13,7 +14,7 @@ import logic.IDataFactory;
  * Socket server class for communication between socket client and server. It
  * contains start method for initialization of threads for each connection.
  * 
- * @author Ander
+ * @author Ander, Markel
  */
 public class SocketServer {
 	/**
@@ -69,9 +70,9 @@ public class SocketServer {
 			}
 
 		} catch (IOException e) {
-			LOGGER.severe("IOExcpetion in socket server: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "IOExcpetion in socket server: " + e);
 		} catch (Exception e) {
-			LOGGER.severe("Excpetion in socket server: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Excpetion in socket server: " + e);
 		} finally {
 			try {
 				if (server != null)
@@ -79,7 +80,7 @@ public class SocketServer {
 				if (socket != null)
 					socket.close();
 			} catch (IOException e) {
-				LOGGER.severe("IOExcpetion in socket server while closing: " + e.getMessage());
+				LOGGER.log(Level.SEVERE, "IOExcpetion in socket server while closing: " + e);
 			}
 		}
 	}

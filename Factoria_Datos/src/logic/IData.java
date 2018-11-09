@@ -10,7 +10,10 @@ import messageuserbean.UserBean;
 /**
  * DAO interface encapsulating methods for server connections
  * 
+ * @author Markel
  * @author Julen
+ * @author Ander
+ * @author Paula
  */
 
 public interface IData {
