@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import messageuserbean.UserBean;
@@ -17,6 +18,8 @@ import messageuserbean.UserBean;
  * 
  * @author Markel
  * @author Julen
+ * @author Ander
+ * @author Paula
  */
 
 public class IDataImplementation implements IData {
@@ -122,15 +125,15 @@ public class IDataImplementation implements IData {
 			// pasan en la variable user --------------------
 
 		} catch (SQLException e) {
-			LOGGER.severe("SQLException: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "SQLException: " + e);
 		} catch (InstantiationException e) {
-			LOGGER.severe("InstantiationException: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "InstantiationException: " + e);
 		} catch (IllegalAccessException e) {
-			LOGGER.severe("IllegalAccessException: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "IllegalAccessException: " + e);
 		} catch (ClassNotFoundException e) {
-			LOGGER.severe("ClassNotFoundException: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "ClassNotFoundException: " + e);
 		} catch (IOException e) {
-			LOGGER.severe("IOException: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "IOException: " + e);
 		} finally {
 			stmt.close();
 			disconnect();
@@ -181,14 +184,15 @@ public class IDataImplementation implements IData {
 			} else {
 				throw new UserNotExistException();
 			}
-			// -------------------- Como las comprobaciones correctas, actualizamos fecha de login
+			// -------------------- Como las comprobaciones correctas, actualizamos fecha de
+			// login
 			// --------------------
-				Timestamp last= new Timestamp(System.currentTimeMillis()); 
-				String updateLastAcces = "update usuarios set lastAccess = '"+last+"' where login = ?";
-				stmt = con.prepareStatement(updateLastAcces);
-				stmt.setString(1, user.getLogin());
-				
-				stmt.executeUpdate();
+			Timestamp last = new Timestamp(System.currentTimeMillis());
+			String updateLastAcces = "update usuarios set lastAccess = '" + last + "' where login = ?";
+			stmt = con.prepareStatement(updateLastAcces);
+			stmt.setString(1, user.getLogin());
+
+			stmt.executeUpdate();
 
 			// -------------------- Si la Contraseña es correcta almacenar los datos en una
 			// variable user --------------------
@@ -198,8 +202,9 @@ public class IDataImplementation implements IData {
 				usuario.setEmail(rs2.getString(3));
 				usuario.setFullname(rs2.getString(4));
 				usuario.setPassword(rs2.getString(7));
-				usuario.setLastPasswordChange(rs2.getTimestamp(8));
-				usuario.setLastAccess(rs2.getTimestamp(9));
+				usuario.setLastAccess(rs2.getTimestamp(8));
+				usuario.setLastPasswordChange(rs2.getTimestamp(9));
+
 				// -------------------- Si la Contraseña es correcta almacenar los datos en una
 				// variable user --------------------
 
@@ -211,15 +216,15 @@ public class IDataImplementation implements IData {
 			// -------------------- Si la Contraseña no es correcta llamar a la excepcion
 			// --------------------
 		} catch (SQLException e) {
-			LOGGER.severe("SQLException: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "SQLException: " + e);
 		} catch (InstantiationException e) {
-			LOGGER.severe("InstantiationException: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "InstantiationException: " + e);
 		} catch (IllegalAccessException e) {
-			LOGGER.severe("IllegalAccessException: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "IllegalAccessException: " + e);
 		} catch (ClassNotFoundException e) {
-			LOGGER.severe("ClassNotFoundException: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "ClassNotFoundException: " + e);
 		} catch (IOException e) {
-			LOGGER.severe("IOException: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "IOException: " + e);
 		} finally {
 			stmt.close();
 			disconnect();

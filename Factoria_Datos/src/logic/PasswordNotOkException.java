@@ -8,7 +8,7 @@ package logic;
 /**
  * Exception thrown when the password for the login isn't correct
  * 
- * @author Julen
+ * @author Paula
  */
 public class PasswordNotOkException extends Exception {
 

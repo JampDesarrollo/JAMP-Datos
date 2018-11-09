@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import logic.IData;
@@ -18,7 +19,7 @@ import messageuserbean.UserBean;
  * Thread class for treating individual requests of the client. Extends from the
  * class Thread.
  * 
- * @author Ander
+ * @author Ander, Paula
  */
 public class ServerThread extends Thread {
 	/**
@@ -82,7 +83,7 @@ public class ServerThread extends Thread {
 					try {
 						output.writeObject(message);
 					} catch (IOException e2) {
-						LOGGER.severe("IOException on SignUp Thread: " + e2.getMessage());
+						LOGGER.log(Level.SEVERE, "IOException on SignUp Thread: " + e2);
 					}
 				}
 
@@ -97,49 +98,49 @@ public class ServerThread extends Thread {
 					try {
 						output.writeObject(message);
 					} catch (IOException e2) {
-						LOGGER.severe("IOException on Login Thread: " + e2.getMessage());
+						LOGGER.log(Level.SEVERE, "IOException on Login Thread: " + e2);
 					}
 				}
 				break;
 			}
 
 		} catch (UserLoginExistException e) {
-			LOGGER.severe("Ya existe un usuario con ese Login. \\n" + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Ya existe un usuario con ese Login. " + e);
 			message = new Message(11, null);
 			try {
 				output.writeObject(message);
 			} catch (IOException e1) {
-				LOGGER.severe("IOException on Thread UserLoginExistException writing: " + e1.getMessage());
+				LOGGER.log(Level.SEVERE, "IOException on Thread UserLoginExistException writing: " + e1);
 			}
 		} catch (UserNotExistException e) {
-			LOGGER.severe("No existe un usuario con ese Login. \\n" + e.getMessage());
+			LOGGER.log(Level.SEVERE, "No existe un usuario con ese Login. " + e);
 			message = new Message(22, null);
 			try {
 				output.writeObject(message);
 			} catch (IOException e1) {
-				LOGGER.severe("IOException on Thread UserNotExistException writing: " + e1.getMessage());
+				LOGGER.log(Level.SEVERE, "IOException on Thread UserNotExistException writing: " + e1);
 			}
 		} catch (PasswordNotOkException e) {
-			LOGGER.severe("Contraseña incorrecta para ese Login. \\n" + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Contraseña incorrecta para ese Login. " + e);
 			message = new Message(21, null);
 			try {
 				output.writeObject(message);
 			} catch (IOException e1) {
-				LOGGER.severe("IOException on Thread PasswordNotOkException writing: " + e1.getMessage());
+				LOGGER.log(Level.SEVERE, "IOException on Thread PasswordNotOkException writing: " + e1);
 			}
 		} catch (SQLException e) {
-			LOGGER.severe("Error SQLException. \\n" + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Error SQLException. " + e);
 		} catch (IOException e) {
-			LOGGER.severe("No se ha podido abrir la ventana. \\n" + e.getMessage());
+			LOGGER.log(Level.SEVERE, "No se ha podido abrir la ventana. " + e);
 		} catch (ClassNotFoundException e) {
-			LOGGER.severe(" Clase no encontrada. \\n" + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Clase no encontrada. " + e);
 		} catch (Exception e) {
-			LOGGER.severe(" Error. \\n" + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Error. " + e);
 			message = new Message(-1, null);
 			try {
 				output.writeObject(message);
 			} catch (IOException e1) {
-				LOGGER.severe("IOException on Thread Exception writing: " + e1.getMessage());
+				LOGGER.log(Level.SEVERE, "IOException on Thread Exception writing: " + e1);
 			}
 		}
 	}
