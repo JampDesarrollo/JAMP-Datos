@@ -142,6 +142,14 @@ public class ServerThread extends Thread {
 			} catch (IOException e1) {
 				LOGGER.log(Level.SEVERE, "IOException on Thread Exception writing: " + e1);
 			}
+		}finally {
+			try {
+				this.interrupt();
+				socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

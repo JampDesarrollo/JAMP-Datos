@@ -135,7 +135,10 @@ public class IDataImplementation implements IData {
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "IOException: " + e);
 		} finally {
-			stmt.close();
+			if (rs != null)
+				rs.close();
+			if (stmt != null)
+				stmt.close();
 			disconnect();
 		}
 
@@ -226,7 +229,12 @@ public class IDataImplementation implements IData {
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "IOException: " + e);
 		} finally {
-			stmt.close();
+			if (rs != null)
+				rs.close();
+			if (rs2 != null)
+				rs2.close();
+			if (stmt != null)
+				stmt.close();
 			disconnect();
 		}
 
